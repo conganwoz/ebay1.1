@@ -299,7 +299,7 @@ if(ISSET($res->Item->ReturnPolicy->ReturnsWithin)){
 $detail .= "<br><h4><span class='normal'>Vận chuyển từ: </span>".$res->Item->Location."</h4>";
 $detail .= "<br><h4><span class='normal'>Ngày kết thúc bán: </span>".substr($res->Item->EndTime,0,10)."</h4>";
 $detail .= "<button type='button' class='btn' id='cart'><i class='fa fa-cart-plus'></i> Thêm vào giỏ hàng</button><span> </span>";
-$detail .= "<button type='button' class='btn' id='buy'>Mua ngay</button>";
+$detail .= "<a href='".$res->Item->ViewItemURLForNaturalSearch."'><button type='button' class='btn' id='buy'>Mua ngay</button></a>";
 $detail .= "<br><h4><span>Phạm vi vận chuyển: </span></h4>";
 foreach($res->Item->ShipToLocations as $location){
   $detail .= "<span class='normal'>".$location." </span>";//$location." ";
@@ -557,7 +557,27 @@ async function processTrans(array){
 }
 
 
+
 </script>
+<?php
+$addCartJS = "<script>
+document.getElementById('cart').addEventListener('click',()=>{
+  axios.get('addToCart.php?productLink=".$res->Item->ViewItemURLForNaturalSearch."')
+  .then((res)=>{
+    console.log(res);
+    if(res.data == 'OK'){
+      alert('thêm vào giỏ hàng thành công!');
+    }else {
+      alert('lỗi thên vào giỏ hàng!');
+    }
+  })
+  .catch((err)=>{
+    console.log(err);
+  });
+});
+</script>";
+echo $addCartJS;
+?>
 </body>
 </html>
 
