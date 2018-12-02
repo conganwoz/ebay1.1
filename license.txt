@@ -1,0 +1,58 @@
+Copyright 2007 eBay Inc. All rights reserved.
+
+eBay, eBay API, and eBay SDK are trademarks of eBay Inc.
+
+Sample Source Code License
+The material below is sample source code in the form of example
+applications and code fragments (both in the source code files and
+documentation provided hereunder), and may include a tutorial
+application (collectively, "Sample Source Code" or "SSC").  YOUR
+RECEIPT AND USE OF THE SSC IS CONTINGENT UPON THE TERMS AND CONDITIONS
+SET FORTH BELOW.
+
+License. Subject to the terms and restrictions set forth herein, eBay
+grants you a non-exclusive, non-transferable, non-sublicensable,
+royalty-free license to download and use the SSC solely to create and
+distribute derivative works ("Derivative Works") which are designed to
+assist your end users to efficiently interact with the eBay Site
+(e.g., a listing application) (the "License").  Except as otherwise
+expressly stated below, you are not permitted to sell, lease, rent,
+copy, distribute or sublicense the SSC, or derivative copies thereof,
+or to use it in a time-sharing arrangement or in any other
+unauthorized manner. This License does not grant you any rights to
+patents, copyrights, trade secrets, trademarks, or any other rights in
+respect to the SSC.
+
+Redistribution. You may not use the SSC in any manner that is not
+expressly authorized under this License. Without limiting the
+foregoing, you may redistribute, use and create Derivative Works in
+source and binary forms, subject to the following conditions:
+  1. Redistributions of SSC must retain this list of conditions and
+     the copyright notice and disclaimer noted below.
+  2. Redistributions in binary form must reproduce the copyright
+     notice, this list of conditions and the disclaimer in the
+     documentation and/or other materials provided with the
+     distribution.
+  3. Redistribution Conditions:
+     · Neither the name of eBay Inc. nor the names of its contributors
+       may be used to endorse or promote products derived from this
+       software or materials without specific prior written
+       permission.
+     · Disclaimer. "THIS SOFTWARE AND ANY RELATED MATERIALS ARE
+       PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+       ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+       TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
+       PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+       COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+       INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+       DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+       SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+       BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+       LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+       (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
+       THE USE OF THIS SOFTWARE, AND/OR ANY RELATED MATERIALS, EVEN IF
+       ADVISED OF THE POSSIBILITY OF SUCH DAMAGE."
+     · Copyright Notice: "Copyright (c) 2007, eBay Inc.
+			  All rights reserved."
+
+
