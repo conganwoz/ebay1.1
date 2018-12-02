@@ -1,3 +1,8 @@
+===========================================================================================
+init ebay ptoject instruction below- this is my custom project base on ebay example project
+===========================================================================================
+
+
 In addition to this readme, this archive file contains the following 
 files:
 
