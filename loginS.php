@@ -39,7 +39,7 @@ session_start();
     </form>
     <ul class="nav navbar-nav navbar-right col-sm-2">
       <li><a href="./signup.php"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
-      <li><a href="./login.php"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+      <li><a href="./loginS.php"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
     </ul>
   </div>
   <hr style="background:#000;">

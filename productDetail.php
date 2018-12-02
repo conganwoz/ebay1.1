@@ -1,5 +1,16 @@
 <?php
+
+
+session_start();
+if(ISSET($_SESSION["username"])){
+  $userName = $_SESSION["username"];
+  $password = $_SESSION["password"];
+
+}
 $id = $_GET['id'];
+$_SESSION['productId'] = $id;
+$productId = $_SESSION['productId'];
+//echo "<script type='text/javascript'>alert('$productId');</script>";
 $url = "http://open.api.ebay.com/shopping?callname=GetSingleItem&responseencoding=JSON&appid=Benjamin-TrendWat-PRD-f2466ad44-bc17cfa6&siteid=0&version=981&IncludeSelector=Compatibility,Description,Details,ItemSpecifics,TextDescription,HighBidder.FeedbackPrivate,HighBidder.FeedbackScore&ItemID=";
 $url .= $id;
 
@@ -58,6 +69,9 @@ $res = json_decode($data);
       color: #fff;
       outline: none;
     }
+    .commentArea {
+      padding: 10px;
+    }
     </style>
 </head>
 <body>
@@ -74,8 +88,17 @@ $res = json_decode($data);
       <input type="submit" class="btn btn-primary" name="FindIt" value="Tìm kiếm">
     </form>
     <ul class="nav navbar-nav navbar-right col-sm-2">
-      <li><a href="/user/signup"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
-      <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+    <?php
+      if(ISSET($userName) && ISSET($password)){
+        $logined = "<li><a style='padding:0;' href='#'><img src='https://i1.wp.com/www.winhelponline.com/blog/wp-content/uploads/2017/12/user.png?fit=256%2C256&quality=100&ssl=1' class='img-circle' alt='Cinque Terre' width='50' height='50'> </a><h4 style='text-align:center;margin:0;'>".$userName."</h4></li>";
+        $logined .= "<li><a href='logoutS.php' target='_self'>đăng xuất</a></li>";
+        print $logined;
+      }else {
+        $noLogin = "<li><a href='./signup.php'><span class='glyphicon glyphicon-user'></span> Sign Up</a></li>
+      <li><a href='./loginS.php'><span class='glyphicon glyphicon-log-in'></span> Login</a></li>";
+      print $noLogin;
+      }
+      ?>
     </ul>
   </div>
   <hr style="background:#000;">
@@ -356,6 +379,135 @@ if(ISSET($res->Item->ItemSpecifics)){
 </div>
 <div class="col-md-6"></div>
 </div>
+<div class="row">
+<div class="col-md-1"></div>
+<div class="col-md-11">
+<h3>ĐÁNH GIÁ SẢN PHẨM:</h3>
+</div>
+</div>
+
+
+<!-- <div class='row'>
+<div class='col-md-1'></div>
+<div class='col-md-11'>
+<div class='userArea'>
+<img src='https://i1.wp.com/www.winhelponline.com/blog/wp-content/uploads/2017/12/user.png?fit=256%2C256&quality=100&ssl=1' class='img-circle' alt='Cinque Terre' width='40' height='40'>
+<span>name</span>
+</div>
+<div class='commentArea'>
+<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Amet, quibusdam.</p>
+</div>
+<hr style='background:#ccc;margin:10px;'>
+</div>
+<div class='col-md-1'></div>
+</div> -->
+
+
+
+<?php
+$conn = mysqli_connect('localhost','root','123456','shopdee');
+mysqli_set_charset($conn,'UTF8');
+if(mysqli_connect_errno()){
+  echo 'Failed to conect to MySql '.mysqli_connect_errno();
+}
+
+$query = "SELECT user.userName, comment.content FROM comment,user WHERE comment.userId=user.id AND comment.productId='$id'";
+
+$result = mysqli_query($conn,$query);
+//fetch data
+$posts = mysqli_fetch_all($result,MYSQLI_ASSOC);
+// var_dump($posts);
+// free memory
+mysqli_free_result($result);
+//close connection
+mysqli_close($conn);
+?>
+
+<?php foreach($posts as $post):?>
+
+<div class='row'>
+<div class='col-md-1'></div>
+<div class='col-md-11'>
+<div class='userArea'>
+<img src='https://i1.wp.com/www.winhelponline.com/blog/wp-content/uploads/2017/12/user.png?fit=256%2C256&quality=100&ssl=1' class='img-circle' alt='Cinque Terre' width='40' height='40'>
+<span><?php echo $post['userName'];?></span>
+</div>
+<div class='commentArea'>
+<p><?php echo $post['content'];?></p>
+</div>
+<hr style='background:#ccc;margin:10px;'>
+</div>
+<div class='col-md-1'></div>
+</div>
+
+<?php endforeach;?>
+
+<!-- <div class='row'>
+<form action=''>
+<div class='form-group'>
+<div class='col-sm-1'></div>
+<div class='col-sm-9'>
+<input type='text' name='comment' class='form-control'>
+</div>
+<div class='col-sm-1'>
+<input type='submit' name='submit' value='Đánh giá' class='form-control'>
+</div>
+<div class='col-sm-1'></div>
+</div>
+
+</form>
+<br>
+<br>
+<br>
+<br>
+</div> -->
+<?php
+if(ISSET($userName) && ISSET($password)){
+  $commentArea = "<div class='row'><form action='productDetail.php?id=$id' method='POST'><div class='form-group'><div class='col-sm-1'></div><div class='col-sm-9'><input type='text' name='comment' class='form-control'></div><div class='col-sm-1'><input type='submit' name='submit' value='Đánh giá' class='form-control btn btn-danger'></div><div class='col-sm-1'></div></div></form><br><br><br><br></div>";
+  print $commentArea;
+
+}else {
+  $blockComment = "<h3 style='color:red;margin-top:10px;text-align:center;'>hãy đăng nhập để đánh giá sản phẩm</h3>";
+  print $blockComment;
+}
+?>
+
+
+<?php
+if(ISSET($_POST["submit"]) && $_POST["submit"] == "Đánh giá"){
+  $productId = $_GET['id'];
+  if(ISSET($_POST['comment'])){
+    $comment = $_POST['comment'];
+    if($comment != null && $comment != ''){
+      $conn = mysqli_connect('localhost','root','123456','shopdee');
+        mysqli_set_charset($conn,'UTF8');
+        if(mysqli_connect_errno()){
+            echo 'Failed to conect to MySql '.mysqli_connect_errno();
+        }
+        $query = "SELECT id FROM user WHERE userName='$userName' AND password='$password'";
+        $result = mysqli_query($conn,$query);
+        if(mysqli_affected_rows($conn) > 0){
+          $posts = mysqli_fetch_all($result,MYSQLI_ASSOC);
+          $userId = $posts[0]['id'];
+          
+          //echo "<script type='text/javascript'>alert('$productId');</script>";
+          $query = "INSERT INTO comment (userId, productId, content) VALUES ('$userId', '$productId','$comment')";
+          $result = mysqli_query($conn,$query);
+          mysqli_free_result($result);
+          mysqli_close($conn);
+          echo "<script type='text/javascript'>window.location.href = 'productDetail.php?id=$productId';</script>";
+      }else {
+        echo "<div align=center id='arl'>Lỗi xác thực user!<div>";
+        mysqli_free_result($result);
+        mysqli_close($conn);
+    }
+    }else {
+      $message = "hãy nhập bình luận trước khi gửi!";
+      echo "<script type='text/javascript'>alert('$message');</script>";
+    }
+  }
+}
+?>
 </div>
 <script>
 var imgs = document.getElementsByClassName('subImg');
