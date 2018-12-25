@@ -33,7 +33,13 @@ $res = json_decode($data);
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <title>Shopdee chi tiết sản phẩm</title>
+    <style>
+    .stb {
+      font-size: 200%;
+    }
+    </style>
     <style>
     nav {
         padding: 15px;
@@ -90,7 +96,7 @@ $res = json_decode($data);
     <ul class="nav navbar-nav navbar-right col-sm-2">
     <?php
       if(ISSET($userName) && ISSET($password)){
-        $logined = "<li><a style='padding:0;' href='#'><img src='https://i1.wp.com/www.winhelponline.com/blog/wp-content/uploads/2017/12/user.png?fit=256%2C256&quality=100&ssl=1' class='img-circle' alt='Cinque Terre' width='50' height='50'> </a><h4 style='text-align:center;margin:0;'>".$userName."</h4></li>";
+        $logined = "<li><a style='padding:0;' href='getCard.php'><img src='https://i1.wp.com/www.winhelponline.com/blog/wp-content/uploads/2017/12/user.png?fit=256%2C256&quality=100&ssl=1' class='img-circle' alt='Cinque Terre' width='50' height='50'> </a><h4 style='text-align:center;margin:0;'>".$userName."</h4></li>";
         $logined .= "<li><a href='logoutS.php' target='_self'>đăng xuất</a></li>";
         print $logined;
       }else {
@@ -376,15 +382,52 @@ if(ISSET($res->Item->ItemSpecifics)){
 }
 
 ?>
-</div>
+<!-- </div>
 <div class="col-md-6"></div>
 </div>
 <div class="row">
 <div class="col-md-1"></div>
 <div class="col-md-11">
 <h3>ĐÁNH GIÁ SẢN PHẨM:</h3>
+<span class="fa fa-star stb" style='color:orange;' id="1" onclick="getStar(this)"></span>
+<span class="fa fa-star stb" id="2" onclick="getStar(this)"></span>
+<span class="fa fa-star stb" id="3" onclick="getStar(this)"></span>
+<span class="fa fa-star stb" id="4" onclick="getStar(this)"></span>
+<span class="fa fa-star stb" id="5" onclick="getStar(this)"></span>
+<br>
 </div>
-</div>
+</div> -->
+<?php
+$conn = mysqli_connect('localhost','root','123456','shopdee');
+mysqli_set_charset($conn,'UTF8');
+if(mysqli_connect_errno()){
+  echo 'Failed to conect to MySql '.mysqli_connect_errno();
+}
+$query = "SELECT rating.starNum FROM rating,user WHERE user.userName='$userName' AND user.password='$password' AND user.id=rating.userId";
+$result = mysqli_query($conn,$query);
+//fetch data
+if(mysqli_affected_rows($conn) > 0){
+  $posts = mysqli_fetch_all($result,MYSQLI_ASSOC);
+  $numberStars = (int)$posts[0]["starNum"];
+  $startoHtml = "</div><div class='col-md-6'></div></div><div class='row'><div class='col-md-1'></div><div class='col-md-11'><h3>ĐÁNH GIÁ SẢN PHẨM:</h3>";
+  for($i = 1; $i <= $numberStars; $i++){
+    $startoHtml .= "<span class='fa fa-star stb' style='color:orange;' id='$i' onclick='getStar(this)'></span>";
+  }
+  for($i = $numberStars + 1; $i <= 5; $i++){
+    $startoHtml .= "<span class='fa fa-star stb' id='$i' onclick='getStar(this)'></span>";
+  }
+  $startoHtml .= "<br></div></div>";
+  echo $startoHtml;
+}else {
+  echo "</div><div class='col-md-6'></div></div><div class='row'><div class='col-md-1'></div><div class='col-md-11'><h3>ĐÁNH GIÁ SẢN PHẨM:</h3><span class='fa fa-star stb' style='color:orange;' id='1' onclick='getStar(this)'></span><span class='fa fa-star stb' id='2' onclick='getStar(this)'></span><span class='fa fa-star stb' id='3' onclick='getStar(this)'></span><span class='fa fa-star stb' id='4' onclick='getStar(this)'></span><span class='fa fa-star stb' id='5' onclick='getStar(this)'></span><br></div></div>";
+}
+
+// var_dump($posts);
+// free memory
+mysqli_free_result($result);
+//close connection
+mysqli_close($conn);
+?>
 
 
 <!-- <div class='row'>
@@ -411,7 +454,7 @@ if(mysqli_connect_errno()){
   echo 'Failed to conect to MySql '.mysqli_connect_errno();
 }
 
-$query = "SELECT user.userName, comment.content FROM comment,user WHERE comment.userId=user.id AND comment.productId='$id'";
+$query = "SELECT user.userName, comment.content, rating.starNum FROM comment,user,rating WHERE comment.userId=user.id AND comment.productId='$id' AND rating.productId=comment.productId AND rating.userId=user.id";
 
 $result = mysqli_query($conn,$query);
 //fetch data
@@ -434,6 +477,7 @@ mysqli_close($conn);
 </div>
 <div class='commentArea'>
 <p><?php echo $post['content'];?></p>
+<p><?php echo $post['starNum'];?> <span class='fa fa-star stb' style='color:orange;font-size: 90%;' ></span></p>
 </div>
 <hr style='background:#ccc;margin:10px;'>
 </div>
@@ -578,6 +622,28 @@ document.getElementById('cart').addEventListener('click',()=>{
 </script>";
 echo $addCartJS;
 ?>
+<script>
+function getStar(tag){
+let id = tag.id;
+for(let i = 1; i <= 5; i++){
+if(i <= id){
+document.getElementById(i).style.color = 'orange';
+}else {
+document.getElementById(i).style.color = 'black';
+}
+}
+
+axios.post(`starRating.php?starNum=${id}`).then(res =>{
+  console.log(res.data);
+})
+.catch(err =>{
+  console.log(err);
+});
+}
+
+
+
+</script>
 </body>
 </html>
 
